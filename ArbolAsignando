@@ -1,0 +1,41 @@
+# Arbol de expresiones (con variable)
+
+from Pila import Pila
+
+def convertir(lista, pila):
+    if lista != []:
+        if lista[0] in "+-*/":
+            nodo_der = pila.desapilar()
+            nodo_izq = pila.desapilar()
+            pila.apilar(Nodo(lista[0],nodo_izq,nodo_der))
+        else:
+            pila.apilar(Nodo(lista[0]))
+        return convertir(lista[1:],pila)
+
+def evaluar(arbol):
+    if arbol.valor == "+":
+        return evaluar(arbol.izq) + evaluar(arbol.der)
+    if arbol.valor == "-":
+        return evaluar(arbol.izq) - evaluar(arbol.der)
+    if arbol.valor == "/":
+        return evaluar(arbol.izq) / evaluar(arbol.der)
+    if arbol.valor == "*":
+        return evaluar(arbol.izq) * evaluar(arbol.der)
+    return int(arbol.valor)
+	
+class Nodo():
+    def __init__(self, val, izq=None, der=None):
+        self.valor = val
+        self.izq = izq
+        self.der = der
+		
+if __name__ == "__main__":
+	f = open("expresiones.in","r")
+	linea = f.read().splitlines()
+	dic ={}
+	for i in range(len(linea)):
+		if "=" in linea[i]:
+			b = linea[i].split("=")
+			print(b)
+			for j in range(len(b)-1):
+				value = dic.setdefault(b[j],b[j-1])
